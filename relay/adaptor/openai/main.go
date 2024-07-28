@@ -117,14 +117,14 @@ func Handler(c *gin.Context, resp *http.Response, promptTokens int, modelName st
 		}, nil
 	}
 
-	// 移除返回的 "model" 字段
-    	textResponse.Model = ""
+	// 删除 model 字段
+    	delete(textResponse, "model")
 
-	// 重置响应体为修改后的结构
-	modifiedResponseBody, err := json.Marshal(textResponse)
-	if err != nil {
-	   return ErrorWrapper(err, "marshal_modified_response_body_failed", http.StatusInternalServerError), nil
-	}
+    	// 重置响应体为修改后的结构
+    	modifiedResponseBody, err := json.Marshal(textResponse)
+    	if err != nil {
+        	return ErrorWrapper(err, "marshal_modified_response_body_failed", http.StatusInternalServerError), nil
+    	}
 	// Reset response body
 	resp.Body = io.NopCloser(bytes.NewBuffer(responseBody))
 
