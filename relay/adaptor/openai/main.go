@@ -117,6 +117,22 @@ func Handler(c *gin.Context, resp *http.Response, promptTokens int, modelName st
 		}, nil
 	}
 
+	// Check and modify "model" field if it exists
+	var responseMap map[string]interface{}
+	err = json.Unmarshal(responseBody, &responseMap)
+	if err != nil {
+		return ErrorWrapper(err, "unmarshal_response_body_failed", http.StatusInternalServerError), nil
+	}
+
+	if _, ok := responseMap["model"]; ok {
+		responseMap["model"] = "hillo_70b"
+		modifiedResponseBody, err := json.Marshal(responseMap)
+		if err != nil {
+			return ErrorWrapper(err, "marshal_modified_response_body_failed", http.StatusInternalServerError), nil
+		}
+		responseBody = modifiedResponseBody
+	}
+
 	// Reset response body
 	resp.Body = io.NopCloser(bytes.NewBuffer(responseBody))
 
