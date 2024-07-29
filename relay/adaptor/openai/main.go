@@ -124,8 +124,15 @@ func Handler(c *gin.Context, resp *http.Response, promptTokens int, modelName st
 		return ErrorWrapper(err, "unmarshal_response_body_failed", http.StatusInternalServerError), nil
 	}
 
-	if _, ok := responseMap["model"]; ok {
-		responseMap["model"] = "hillo_70b"
+	if modelValue, ok := responseMap["model"]; ok {
+		modelStr, isString := modelValue.(string)
+		if isString {
+			if strings.Contains(modelStr, "gpt") {
+				responseMap["model"] = "Hillo_Classical"
+			} else {
+				responseMap["model"] = "Hillo_70b"
+			}
+		}
 		modifiedResponseBody, err := json.Marshal(responseMap)
 		if err != nil {
 			return ErrorWrapper(err, "marshal_modified_response_body_failed", http.StatusInternalServerError), nil
