@@ -117,6 +117,32 @@ func Handler(c *gin.Context, resp *http.Response, promptTokens int, modelName st
 		}, nil
 	}
 
+	// Check and modify "model" field if it exists
+	var responseMap map[string]interface{}
+	err = json.Unmarshal(responseBody, &responseMap)
+	if err != nil {
+		return ErrorWrapper(err, "unmarshal_response_body_failed", http.StatusInternalServerError), nil
+	}
+
+	if modelValue, ok := responseMap["model"]; ok {
+		modelStr, isString := modelValue.(string)
+		//if isString {
+			//if strings.Contains(modelStr, "gpt") {
+			//	responseMap["model"] = "Hillo_Classical"
+			//} else {
+			//	responseMap["model"] = "Hillo_70b"
+			//}
+		//}
+		modifiedResponseBody, err := json.Marshal(responseMap)
+		if err != nil {
+			return ErrorWrapper(err, "marshal_modified_response_body_failed", http.StatusInternalServerError), nil
+		}
+		responseBody = modifiedResponseBody
+	}
+
+	// Reset response body
+	resp.Body = io.NopCloser(bytes.NewBuffer(responseBody))
+
 	// We shouldn't set the header before we parse the response body, because the parse part may fail.
 	// And then we will have to send an error response, but in this case, the header has already been set.
 	// So the HTTPClient will be confused by the response.
