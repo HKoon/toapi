@@ -117,9 +117,6 @@ func Handler(c *gin.Context, resp *http.Response, promptTokens int, modelName st
 		}, nil
 	}
 
-	// 删除 model 字段
-    	delete(textResponse, "model")
-
 	// Reset response body
 	resp.Body = io.NopCloser(bytes.NewBuffer(responseBody))
 
