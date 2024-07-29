@@ -46,6 +46,35 @@ func StreamHandler(c *gin.Context, resp *http.Response, relayMode int) (*model.E
 			doneRendered = true
 			continue
 		}
+
+		// 解析并修改 model 字段
+		var responseMap map[string]interface{}
+		err := json.Unmarshal([]byte(data[dataPrefixLength:]), &responseMap)
+		if err != nil {
+			logger.SysError("error unmarshalling stream response: " + err.Error())
+			render.StringData(c, data) // if error happened, pass the data to client
+			continue                   // just ignore the error
+		}
+
+		if modelValue, ok := responseMap["model"]; ok {
+			modelStr, isString := modelValue.(string)
+			if isString {
+				if strings.Contains(modelStr, "gpt") {
+					responseMap["model"] = "hillo-classical"
+				} else {
+					responseMap["model"] = "hillo-70b"
+				}
+			}
+			modifiedData, err := json.Marshal(responseMap)
+			if err != nil {
+				logger.SysError("error marshalling modified response: " + err.Error())
+				render.StringData(c, data) // if error happened, pass the data to client
+				continue                   // just ignore the error
+			}
+			data = data[:dataPrefixLength] + string(modifiedData)
+		}
+
+		
 		switch relayMode {
 		case relaymode.ChatCompletions:
 			var streamResponse ChatCompletionsStreamResponse
@@ -128,9 +157,9 @@ func Handler(c *gin.Context, resp *http.Response, promptTokens int, modelName st
 		modelStr, isString := modelValue.(string)
 		if isString {
 			if strings.Contains(modelStr, "gpt") {
-				responseMap["model"] = "Hillo_Classical"
-			//} else {
-			//	responseMap["model"] = "Hillo_70b"
+				responseMap["model"] = "hillo-classical"
+			} else {
+				responseMap["model"] = "hillo-70b"
 			}
 		}
 		modifiedResponseBody, err := json.Marshal(responseMap)
