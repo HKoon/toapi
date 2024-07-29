@@ -85,7 +85,7 @@ func RelayTextHelper(c *gin.Context) *model.ErrorWithStatusCode {
 
 func getRequestBody(c *gin.Context, meta *meta.Meta, textRequest *model.GeneralOpenAIRequest, adaptor adaptor.Adaptor) (io.Reader, error) {
 	// Read the request body
-	bodyBytes, err := ioutil.ReadAll(c.Request.Body)
+	bodyBytes, err := io.ReadAll(c.Request.Body)
 	if err != nil {
 		return nil, err
 	}
