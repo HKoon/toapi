@@ -94,7 +94,7 @@ func (a *Adaptor) DoResponse(c *gin.Context, resp *http.Response, meta *meta.Met
 		var responseText string
 		err, responseText, usage = StreamHandler(c, resp, meta.Mode)
 		if usage == nil || usage.TotalTokens == 0 {
-			usage = ResponseText2Usage(responseText, meta.OriginModelName, meta.PromptTokens)
+			usage = ResponseText2Usage(responseText, meta.ActualModelName, meta.PromptTokens)
 		}
 		if usage.TotalTokens != 0 && usage.PromptTokens == 0 { // some channels don't return prompt tokens & completion tokens
 			usage.PromptTokens = meta.PromptTokens
@@ -105,8 +105,7 @@ func (a *Adaptor) DoResponse(c *gin.Context, resp *http.Response, meta *meta.Met
 		case relaymode.ImagesGenerations:
 			err, _ = ImageHandler(c, resp)
 		default:
-			err, usage = Handler(c, resp, meta.PromptTokens, meta.OriginModelName)
-			//不返回实际模型
+			err, usage = Handler(c, resp, meta.PromptTokens, meta.ActualModelName)
 		}
 	}
 	return
