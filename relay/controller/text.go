@@ -119,7 +119,7 @@ func getRequestBody(c *gin.Context, meta *meta.Meta, textRequest *model.GeneralO
 
 	// Replace the original request body with the modified one
 	c.Request.Body = io.NopCloser(bytes.NewBuffer(modifiedBodyBytes))
-	logger.info(c.Request.Body)
+	logger.Debugf(c.Request.Body)
 	
 	// if it is openai
 	if meta.APIType == apitype.OpenAI && meta.OriginModelName == meta.ActualModelName && meta.ChannelType != channeltype.Baichuan {
