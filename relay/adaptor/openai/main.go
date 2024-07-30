@@ -159,7 +159,7 @@ func Handler(c *gin.Context, resp *http.Response, promptTokens int, modelName st
 			if strings.Contains(modelStr, "gpt") {
 				responseMap["model"] = "hillo-classical"
 			} else {
-				responseMap["model"] = "hillo-70b"
+				responseMap["model"] = "hillo-medium"
 			}
 		}
 		modifiedResponseBody, err := json.Marshal(responseMap)
