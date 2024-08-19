@@ -153,6 +153,22 @@ func Handler(c *gin.Context, resp *http.Response, promptTokens int, modelName st
 		return ErrorWrapper(err, "unmarshal_response_body_failed", http.StatusInternalServerError), nil
 	}
 
+	// Replace multiple backslashes followed by "n" with a newline
+	re := regexp.MustCompile(`\\+n`)
+	if choices, ok := responseMap["choices"].([]interface{}); ok {
+		for _, choice := range choices {
+			if choiceMap, ok := choice.(map[string]interface{}); ok {
+				if message, ok := choiceMap["message"].(map[string]interface{}); ok {
+					if content, ok := message["content"].(string); ok {
+						// Replace all instances of "\\*n" with "\n"
+						content = re.ReplaceAllString(content, "\n")
+						message["content"] = content
+					}
+				}
+			}
+		}
+	}
+
 	if modelValue, ok := responseMap["model"]; ok {
 		modelStr, isString := modelValue.(string)
 		if isString {
