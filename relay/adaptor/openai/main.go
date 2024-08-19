@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"strings"
+	"regexp"
 
 	"github.com/songquanpeng/one-api/common/render"
 
