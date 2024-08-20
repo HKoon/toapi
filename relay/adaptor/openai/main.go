@@ -62,7 +62,7 @@ func StreamHandler(c *gin.Context, resp *http.Response, relayMode int) (*model.E
 				if strings.Contains(modelStr, "gpt") {
 					responseMap["model"] = "hillo-classical"
 				} else {
-					responseMap["model"] = "hillo-70b"
+					responseMap["model"] = "hillo-medium"
 				}
 			}
 			modifiedData, err := json.Marshal(responseMap)
