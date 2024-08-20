@@ -117,23 +117,23 @@ var ValidThemes = map[string]bool{
 // All duration's unit is seconds
 // Shouldn't larger then RateLimitKeyExpirationDuration
 var (
-	GlobalApiRateLimitNum            = env.Int("GLOBAL_API_RATE_LIMIT", 240)
+	GlobalApiRateLimitNum            = env.Int("GLOBAL_API_RATE_LIMIT", 500)
 	GlobalApiRateLimitDuration int64 = 3 * 60
 
-	GlobalWebRateLimitNum            = env.Int("GLOBAL_WEB_RATE_LIMIT", 120)
+	GlobalWebRateLimitNum            = env.Int("GLOBAL_WEB_RATE_LIMIT", 240)
 	GlobalWebRateLimitDuration int64 = 3 * 60
 
-	UploadRateLimitNum            = 10
-	UploadRateLimitDuration int64 = 60
+	UploadRateLimitNum            = 50
+	UploadRateLimitDuration int64 = 30
 
-	DownloadRateLimitNum            = 10
-	DownloadRateLimitDuration int64 = 60
+	DownloadRateLimitNum            = 50
+	DownloadRateLimitDuration int64 = 30
 
 	CriticalRateLimitNum            = 20
 	CriticalRateLimitDuration int64 = 20 * 60
 )
 
-var RateLimitKeyExpirationDuration = 20 * time.Minute
+var RateLimitKeyExpirationDuration = 40 * time.Minute
 
 var EnableMetric = env.Bool("ENABLE_METRIC", false)
 var MetricQueueSize = env.Int("METRIC_QUEUE_SIZE", 10)
