@@ -89,7 +89,7 @@ var AutomaticEnableChannelEnabled = false
 var QuotaRemindThreshold int64 = 1000
 var PreConsumedQuota int64 = 500
 var ApproximateTokenEnabled = false
-var RetryTimes = 0
+var RetryTimes = 2
 
 var RootUserEmail = ""
 
@@ -103,7 +103,7 @@ var SyncFrequency = env.Int("SYNC_FREQUENCY", 10*60) // unit is second
 var BatchUpdateEnabled = false
 var BatchUpdateInterval = env.Int("BATCH_UPDATE_INTERVAL", 5)
 
-var RelayTimeout = env.Int("RELAY_TIMEOUT", 0) // unit is second
+var RelayTimeout = env.Int("RELAY_TIMEOUT", 30) // unit is second
 
 var GeminiSafetySetting = env.String("GEMINI_SAFETY_SETTING", "BLOCK_NONE")
 
