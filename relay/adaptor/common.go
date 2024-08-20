@@ -66,30 +66,26 @@ func modifyRequestBody(requestBody io.Reader) (io.Reader, error) {
 func DoRequestHelper(a Adaptor, c *gin.Context, meta *meta.Meta, requestBody io.Reader) (*http.Response, error) {
     modifiedRequestBody, err := modifyRequestBody(requestBody)
     if err != nil {
-        logError(err) // 打印日志
         return nil, fmt.Errorf("modify request body failed")
     }
 
     fullRequestURL, err := a.GetRequestURL(meta)
     if err != nil {
-        logError(err) // 打印日志
         return nil, fmt.Errorf("get request url failed")
     }
 
     // 这里修正为使用 modifiedRequestBody
     req, err := http.NewRequest(c.Request.Method, fullRequestURL, modifiedRequestBody)
     if err != nil {
-        logError(err) // 打印日志
         return nil, fmt.Errorf("new request failed")
     }
     err = a.SetupRequestHeader(c, req, meta)
     if err != nil {
-        logError(err) // 打印日志
         return nil, fmt.Errorf("setup request header failed")
     }
     resp, err := DoRequest(c, req)
     if err != nil {
-        logError(err) // 打印日志
+        //logError(err) // 打印日志
         return nil, fmt.Errorf("do request failed")
     }
     return resp, nil
