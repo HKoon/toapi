@@ -66,12 +66,14 @@ func modifyRequestBody(requestBody io.Reader) (io.Reader, error) {
 func DoRequestHelper(a Adaptor, c *gin.Context, meta *meta.Meta, requestBody io.Reader) (*http.Response, error) {
     modifiedRequestBody, err := modifyRequestBody(requestBody)
     if err != nil {
-        return nil, fmt.Errorf("modify request body failed: %w", err)
+        logError(err) // 打印日志
+        return nil, fmt.Errorf("modify request body failed")
     }
 
     fullRequestURL, err := a.GetRequestURL(meta)
     if err != nil {
-        return nil, fmt.Errorf("get request url failed: %w", err)
+        logError(err) // 打印日志
+        return nil, fmt.Errorf("get request url failed")
     }
 
     // 这里修正为使用 modifiedRequestBody
