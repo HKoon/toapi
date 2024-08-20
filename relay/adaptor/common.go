@@ -77,15 +77,18 @@ func DoRequestHelper(a Adaptor, c *gin.Context, meta *meta.Meta, requestBody io.
     // 这里修正为使用 modifiedRequestBody
     req, err := http.NewRequest(c.Request.Method, fullRequestURL, modifiedRequestBody)
     if err != nil {
-        return nil, fmt.Errorf("new request failed: %w", err)
+        logError(err) // 打印日志
+        return nil, fmt.Errorf("new request failed")
     }
     err = a.SetupRequestHeader(c, req, meta)
     if err != nil {
-        return nil, fmt.Errorf("setup request header failed: %w", err)
+        logError(err) // 打印日志
+        return nil, fmt.Errorf("setup request header failed")
     }
     resp, err := DoRequest(c, req)
     if err != nil {
-        return nil, fmt.Errorf("do request failed: %w", err)
+        logError(err) // 打印日志
+        return nil, fmt.Errorf("do request failed")
     }
     return resp, nil
 }
